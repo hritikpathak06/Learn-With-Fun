@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: StateType = {
   loading: false,
@@ -21,12 +21,10 @@ const rootSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-
     saveResult: (state, action: PayloadAction<string[]>) => {
       state.loading = false;
       state.result = action.payload;
     },
-
     clearState: (state) => {
       state.loading = false;
       state.result = [];
@@ -37,11 +35,11 @@ const rootSlice = createSlice({
 });
 
 export const {
-  getWordsRequest,
   getWordsSuccess,
+  getWordsRequest,
   getWordsFail,
-  saveResult,
   clearState,
+  saveResult,
 } = rootSlice.actions;
 
 export default rootSlice.reducer;

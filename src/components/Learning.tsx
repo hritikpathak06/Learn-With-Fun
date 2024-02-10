@@ -1,9 +1,9 @@
 import { ArrowBack, VolumeUp } from "@mui/icons-material";
 import { Button, Container, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { translateWords } from "../utils/features";
-import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import {
   getWordsFail,
   getWordsRequest,
@@ -13,13 +13,15 @@ import Loader from "./Loader";
 
 const Learning = () => {
   const [count, setCount] = useState<number>(0);
-  const params = useSearchParams()[0].get("language") as LanType;
+  const params = useSearchParams()[0].get("language") as LangType;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { words, loading, error } = useSelector(
+  const { words, loading} = useSelector(
     (state: { root: StateType }) => state.root
   );
+
+  // console.log("Words++",words)
 
   const nextHandler = (): void => {
     setCount((prev) => prev + 1);
@@ -28,7 +30,7 @@ const Learning = () => {
   useEffect(() => {
     dispatch(getWordsRequest());
     translateWords(params || "hi")
-      .then((arr: WordType[]) => {
+      .then((arr:WordType[]) => {
         console.log(arr);
         dispatch(getWordsSuccess(arr));
       })

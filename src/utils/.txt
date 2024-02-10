@@ -4,29 +4,35 @@ import _ from "lodash";
 
 const generateMCQ = (
   meaning: {
-    Text: string | string[];
+    Text: string;
   }[],
   idx: number
 ): string[] => {
-  const correctAns: string = Array.isArray(meaning[idx].Text)
-    ? meaning[idx].Text[0] 
-    : meaning[idx].Text.toString(); 
+  const correctAns: string = meaning[idx].Text;
   const allMeaningExceptForCorrect = meaning.filter(
     (i) => i.Text !== correctAns
   );
   const inCorrectOptions: string[] = _.sampleSize(
     allMeaningExceptForCorrect,
     3
-  ).map((i) => Array.isArray(i.Text) ? i.Text[0] : i.Text.toString());
+  ).map((i) => i.Text);
   const mcQoptions = _.shuffle([...inCorrectOptions, correctAns]);
   return mcQoptions;
 };
 
 
-export const translateWords = async (params: LangType): Promise<WordType[]> => {
+
+
+
+
+// type WordTypes = {
+//   words:number
+// }
+
+export const translateWords = async (params: LangType) => {
   try {
-    const words = Array.from({ length: 8 }, () => ({
-      Text: generate(),
+    const words = generate(8).map(i => ({
+      Text: i,
     }));
 
     const response = await axios.post(
@@ -47,18 +53,12 @@ export const translateWords = async (params: LangType): Promise<WordType[]> => {
         },
       }
     );
-
-    console.log(response.data);
-    const receive: FetchedDataType[] = response.data;
-
-    const arr: WordType[] = receive.map((i, idx) => {
+    const received: FetchedDataType[] = response.data;
+    const arr: WordType[] = received.map((i, idx) => {
       const options: string[] = generateMCQ(words, idx);
-      const meaning: string = Array.isArray(words[idx].Text)
-        ? words[idx].Text[0]
-        : words[idx].Text.toString(); 
       return {
         word: i.translations[0].text,
-        meaning: meaning,
+        meaning: words[idx].Text,
         options,
       };
     });
@@ -68,3 +68,7 @@ export const translateWords = async (params: LangType): Promise<WordType[]> => {
     throw new Error("Some Error");
   }
 };
+
+  const words = Array.from({ length: 8 }, () => ({
+      Text: generate(),
+    }));
